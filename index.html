@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>恶霸犬告白页面</title>
+    <title>For Hoyee - 宝箱探险</title>
     <style>
         * {
             box-sizing: border-box;
@@ -17,159 +17,181 @@
             align-items: center;
             justify-content: center;
             min-height: 100vh;
-            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
             font-family: 'Arial Rounded MT Bold', 'Helvetica', sans-serif;
             padding: 20px;
-            transition: background 1s ease;
             text-align: center;
+            overflow: hidden;
         }
         
         .container {
             max-width: 800px;
             width: 100%;
+            position: relative;
         }
         
-        /* 按钮样式 */
-        #loveButton {
-            padding: 18px 45px;
-            font-size: 1.4rem;
+        #startButton {
+            padding: 20px 50px;
+            font-size: 2rem;
             background: linear-gradient(to right, #ff6b6b, #ff8e53);
             color: white;
             border: none;
             border-radius: 50px;
             cursor: pointer;
-            box-shadow: 0 6px 20px rgba(255, 107, 107, 0.5);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
             transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             position: relative;
             overflow: hidden;
-            z-index: 1;
+            z-index: 10;
             margin: 30px 0;
         }
         
-        #loveButton:hover {
+        #startButton:hover {
             transform: translateY(-5px) scale(1.05);
-            box-shadow: 0 10px 25px rgba(255, 107, 107, 0.7);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
         }
         
-        #loveButton::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(to right, #ff8e53, #ff6b6b);
-            z-index: -1;
-            transition: opacity 0.4s ease;
-            opacity: 0;
+        /* 新增：按钮点击特效 */
+        #startButton:active {
+            transform: scale(0.95);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
         }
         
-        #loveButton:hover::after {
-            opacity: 1;
+        .adventure-text {
+            font-size: 1.5rem;
+            color: white;
+            margin-top: -20px;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            animation: fadeIn 1.5s ease-out;
         }
         
-        /* 文字样式 */
-        #message {
-            font-size: 3rem;
-            color: #e84393;
-            text-align: center;
-            margin: 40px 0;
-            text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.2);
+        .stage {
             display: none;
-            animation: textPulse 2s infinite;
-            line-height: 1.3;
-        }
-        
-        /* 恶霸犬容器 */
-        #bulldog-container {
-            display: none;
-            max-width: 100%;
-            margin: 30px auto;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
             position: relative;
-            transition: all 0.8s ease;
+            margin-top: 30px;
         }
         
-        /* 恶霸犬图片样式 */
-        .bulldog-image {
+        .chest-container {
+            position: relative;
+            width: 300px;
+            height: 300px;
+            margin: 20px auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .chest {
             max-width: 100%;
-            height: auto;
-            border-radius: 20px;
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
-            transform: scale(0.9);
+            max-height: 100%;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            object-fit: contain;
+        }
+        
+        .vibrate {
+            animation: vibrate 0.5s infinite alternate;
+        }
+        
+        @keyframes vibrate {
+            0% { transform: translateX(0) rotate(0deg); }
+            25% { transform: translateX(-5px) rotate(-2deg); }
+            50% { transform: translateX(5px) rotate(2deg); }
+            75% { transform: translateX(-5px) rotate(-2deg); }
+            100% { transform: translateX(5px) rotate(2deg); }
+        }
+        
+        .open-animation {
+            animation: openChest 1s forwards;
+        }
+        
+        @keyframes openChest {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        
+        /* 新增：宝箱点击特效 */
+        .chest:active {
+            animation: clickEffect 0.3s ease-out;
+        }
+        
+        @keyframes clickEffect {
+            0% { transform: scale(1); }
+            50% { transform: scale(0.9); }
+            100% { transform: scale(1); }
+        }
+        
+        .character {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.5);
             opacity: 0;
             transition: all 1s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            border: 8px solid white;
+            pointer-events: none;
+            max-width: 90%;
+            max-height: 90%;
+            object-fit: contain;
         }
         
-        .bulldog-info {
-            background: rgba(255, 255, 255, 0.85);
-            border-radius: 15px;
-            padding: 20px;
-            margin-top: 25px;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-            text-align: left;
-            display: none;
+        .character.revealed {
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1);
         }
         
-        .bulldog-info h3 {
-            color: #e84393;
-            margin-bottom: 15px;
+        .counter {
             font-size: 1.8rem;
+            color: white;
+            margin: 20px 0;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            background: rgba(0, 0, 0, 0.3);
+            padding: 10px 20px;
+            border-radius: 30px;
         }
         
-        .bulldog-info p {
-            color: #333;
-            line-height: 1.6;
-            margin-bottom: 15px;
-            font-size: 1.1rem;
+        .next-stage-btn {
+            padding: 15px 40px;
+            font-size: 1.5rem;
+            background: linear-gradient(to right, #4CAF50, #8BC34A);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+            margin: 30px 0;
+            opacity: 0;
+            transform: translateY(20px);
         }
         
-        /* 文字动画 */
-        @keyframes textPulse {
-            0% { transform: scale(1); text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.2); }
-            50% { transform: scale(1.08); text-shadow: 5px 5px 10px rgba(0, 0, 0, 0.3); }
-            100% { transform: scale(1); text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.2); }
+        .next-stage-btn.show {
+            opacity: 1;
+            transform: translateY(0);
+            animation: pulse 2s infinite;
         }
         
-        /* 恶霸犬动画 */
-        @keyframes dogEnter {
-            0% { transform: translateY(100px) rotate(5deg); opacity: 0; }
-            100% { transform: translateY(0) rotate(0); opacity: 1; }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
         }
         
-        /* 响应式设计 */
-        @media (max-width: 768px) {
-            #message {
-                font-size: 2.5rem;
-            }
-            
-            #loveButton {
-                padding: 16px 40px;
-                font-size: 1.2rem;
-            }
-            
-            .bulldog-info {
-                padding: 15px;
-            }
+        /* 新增：按钮点击特效 */
+        .next-stage-btn:active {
+            transform: scale(0.95);
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
         }
         
-        @media (max-width: 480px) {
-            #message {
-                font-size: 2rem;
-            }
-            
-            #loveButton {
-                padding: 14px 35px;
-                font-size: 1.1rem;
-            }
-            
-            .bulldog-info h3 {
-                font-size: 1.5rem;
-            }
-            
-            .bulldog-info p {
-                font-size: 1rem;
-            }
+        .stage-title {
+            font-size: 2.5rem;
+            color: white;
+            margin-bottom: 30px;
+            text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.5);
         }
         
         .hearts {
@@ -179,7 +201,7 @@
             width: 100%;
             height: 100%;
             pointer-events: none;
-            z-index: 10;
+            z-index: 1;
         }
         
         .heart {
@@ -195,106 +217,534 @@
             0% { transform: translateY(0) rotate(0deg); opacity: 1; }
             100% { transform: translateY(-100px) rotate(360deg); opacity: 0; }
         }
+        
+        /* 新增：点击波纹效果 */
+        .ripple {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.6);
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+            animation: rippleEffect 0.6s linear;
+        }
+        
+        @keyframes rippleEffect {
+            0% {
+                width: 0;
+                height: 0;
+                opacity: 0.8;
+            }
+            100% {
+                width: 200px;
+                height: 200px;
+                opacity: 0;
+            }
+        }
+        
+        /* 新增：粒子效果 */
+        .particle {
+            position: absolute;
+            pointer-events: none;
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            animation: particleFloat 1s ease-out forwards;
+        }
+        
+        @keyframes particleFloat {
+            0% {
+                transform: translate(0, 0);
+                opacity: 1;
+            }
+            100% {
+                transform: translate(var(--tx), var(--ty));
+                opacity: 0;
+            }
+        }
+        
+        /* 最终提示样式 */
+        .final-hint {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 2.5rem;
+            color: #ffd700;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.8);
+            background: rgba(0, 0, 0, 0.7);
+            padding: 20px 40px;
+            border-radius: 15px;
+            z-index: 100;
+            display: none;
+            animation: pulseHint 1.5s infinite;
+            cursor: pointer;
+        }
+        
+        @keyframes pulseHint {
+            0% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+            50% { transform: translate(-50%, -50%) scale(1.1); opacity: 0.9; }
+            100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+        }
+        
+        /* 最终奖励展示区域 */
+        #final-rewards {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 40px;
+            animation: fadeIn 2s ease-out;
+        }
+        
+        .rewards-container {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin: 30px 0;
+            flex-wrap: wrap;
+        }
+        
+        .reward-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            max-width: 200px;
+        }
+        
+        .reward-image {
+            max-width: 100%;
+            max-height: 200px;
+            object-fit: contain;
+            margin-bottom: 15px;
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease;
+        }
+        
+        .reward-image:hover {
+            transform: scale(1.05);
+        }
+        
+        .birthday-text {
+            font-size: 4rem;
+            color: #ffd700;
+            text-shadow: 3px 3px 10px rgba(0, 0, 0, 0.7);
+            margin: 20px 0;
+            animation: textPulse 3s infinite;
+        }
+        
+        .signature {
+            font-size: 1.5rem;
+            color: rgba(255, 255, 255, 0.8);
+            font-style: italic;
+            margin-top: 10px;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes textPulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        @media (max-width: 768px) {
+            .chest-container {
+                width: 250px;
+                height: 250px;
+            }
+            
+            .stage-title {
+                font-size: 2rem;
+            }
+            
+            #startButton {
+                font-size: 1.5rem;
+                padding: 15px 40px;
+            }
+            
+            .birthday-text {
+                font-size: 3rem;
+            }
+            
+            .final-hint {
+                font-size: 2rem;
+                padding: 15px 30px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .chest-container {
+                width: 200px;
+                height: 200px;
+            }
+            
+            .stage-title {
+                font-size: 1.8rem;
+            }
+            
+            #startButton {
+                font-size: 1.3rem;
+                padding: 12px 30px;
+            }
+            
+            .counter {
+                font-size: 1.5rem;
+            }
+            
+            .birthday-text {
+                font-size: 2.5rem;
+            }
+            
+            .rewards-container {
+                gap: 15px;
+            }
+            
+            .reward-item {
+                max-width: 150px;
+            }
+            
+            .final-hint {
+                font-size: 1.8rem;
+                padding: 12px 25px;
+                width: 90%;
+                text-align: center;
+            }
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <button id="loveButton">点击这里，有惊喜！</button>
+        <button id="startButton">For Hoyee</button>
+        <p class="adventure-text">来进行生日大冒险吧！</p>
         
-        <div id="message">我爱你</div>
+        <div id="stage1" class="stage">
+            <h2 class="stage-title">第一关：寻找布莱恩</h2>
+            <div class="counter">点击次数: <span id="count1">0</span>/5</div>
+            <div class="chest-container">
+                <img src="./baoxiang.png" 
+                     alt="宝箱" 
+                     class="chest vibrate"
+                     id="chest1">
+                <img src="./brian.png" 
+                     alt="布莱恩" 
+                     class="character"
+                     id="brian">
+            </div>
+            <button class="next-stage-btn" id="nextStage1">进入下一关</button>
+        </div>
         
-        <div id="bulldog-container">
-            <!-- 使用真实恶霸犬图片 -->
-            <img src="https://images.unsplash.com/photo-1627920767960-7c8c507f0d0a?auto=format&fit=crop&w=800" 
-                 alt="可爱的恶霸犬" 
-                 class="bulldog-image"
-                 onerror="this.src='https://images.dog.ceo/breeds/bulldog-english/murphy.jpg'">
-            
-            <div class="bulldog-info">
-                <h3>关于恶霸犬的小知识</h3>
-                <p>🐶 虽然外表凶猛，但恶霸犬其实性格温顺稳定，是优秀的家庭伴侣犬[4,7](@ref)</p>
-                <p>💪 拥有夸张的肌肉线条和坚实的身体结构，肩高可达58厘米[1,5](@ref)</p>
-                <p>❤️ 对小孩极为友善，安静不爱吠叫，掉毛少体味轻[4,6](@ref)</p>
-                <p>🏠 能适应各种生活环境，包括城市公寓[5,7](@ref)</p>
+        <div id="stage2" class="stage">
+            <h2 class="stage-title">第二关：牙齿守护者</h2>
+            <div class="counter">点击次数: <span id="count2">0</span>/5</div>
+            <div class="chest-container">
+                <img src="./baoxiang.png" 
+                     alt="宝箱" 
+                     class="chest vibrate"
+                     id="chest2">
+                <img src="./teeth.png" 
+                     alt="卡通牙齿" 
+                     class="character"
+                     id="tooth">
+            </div>
+            <button class="next-stage-btn" id="nextStage2">进入下一关</button>
+        </div>
+        
+        <div id="stage3" class="stage">
+            <h2 class="stage-title">第三关：香蕉乐园</h2>
+            <div class="counter">点击次数: <span id="count3">0</span>/5</div>
+            <div class="chest-container">
+                <img src="./baoxiang.png" 
+                     alt="宝箱" 
+                     class="chest vibrate"
+                     id="chest3">
+                <img src="./banana.png" 
+                     alt="卡通香蕉" 
+                     class="character"
+                     id="banana">
             </div>
         </div>
+        
+        <!-- 最终奖励展示区域 -->
+        <div id="final-rewards">
+            <h2 class="birthday-text">Happy Birthday</h2>
+            <div class="rewards-container">
+                <div class="reward-item">
+                    <img src="./brian.png" alt="布莱恩" class="reward-image">
+                    <p>布莱恩</p>
+                </div>
+                <div class="reward-item">
+                    <img src="./teeth.png" alt="牙齿守护者" class="reward-image">
+                    <p>牙齿守护者</p>
+                </div>
+                <div class="reward-item">
+                    <img src="./banana.png" alt="香蕉乐园" class="reward-image">
+                    <p>香蕉乐园</p>
+                </div>
+            </div>
+            <p class="signature">by JJ 2025.6.2</p>
+        </div>
     </div>
+    
+    <!-- 新增：最终提示元素 -->
+    <div class="final-hint" id="finalHint">再点一下</div>
     
     <div class="hearts" id="heartsContainer"></div>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const button = document.getElementById('loveButton');
-            const message = document.getElementById('message');
-            const bulldogContainer = document.getElementById('bulldog-container');
-            const bulldogImage = document.querySelector('.bulldog-image');
-            const bulldogInfo = document.querySelector('.bulldog-info');
+            const startButton = document.getElementById('startButton');
+            const adventureText = document.querySelector('.adventure-text');
+            const finalHint = document.getElementById('finalHint');
+            const finalRewards = document.getElementById('final-rewards');
+            const stages = [
+                { 
+                    id: 'stage1', 
+                    chest: document.getElementById('chest1'),
+                    character: document.getElementById('brian'),
+                    counter: document.getElementById('count1'),
+                    nextBtn: document.getElementById('nextStage1'),
+                    count: 0
+                },
+                { 
+                    id: 'stage2', 
+                    chest: document.getElementById('chest2'),
+                    character: document.getElementById('tooth'),
+                    counter: document.getElementById('count2'),
+                    nextBtn: document.getElementById('nextStage2'),
+                    count: 0
+                },
+                { 
+                    id: 'stage3', 
+                    chest: document.getElementById('chest3'),
+                    character: document.getElementById('banana'),
+                    counter: document.getElementById('count3'),
+                    count: 0
+                }
+            ];
+            
+            let currentStage = -1;
             const heartsContainer = document.getElementById('heartsContainer');
             
-            button.addEventListener('click', function() {
-                // 隐藏按钮
-                button.style.display = 'none';
+            // 开始按钮点击事件
+            startButton.addEventListener('click', function(event) {
+                // 添加点击特效
+                createRipple(event);
+                createParticles(event);
                 
-                // 显示文字
-                message.style.display = 'block';
-                
-                // 显示恶霸犬并添加动画
-                setTimeout(() => {
-                    bulldogContainer.style.display = 'block';
-                    
-                    // 图片入场动画
-                    setTimeout(() => {
-                        bulldogImage.style.transform = 'scale(1)';
-                        bulldogImage.style.opacity = '1';
-                        
-                        // 显示信息卡片
-                        setTimeout(() => {
-                            bulldogInfo.style.display = 'block';
-                            bulldogInfo.style.animation = 'dogEnter 0.8s ease-out forwards';
-                            
-                            // 创建漂浮爱心
-                            createHearts();
-                        }, 800);
-                    }, 100);
-                }, 500);
-                
-                // 背景渐变变化
-                document.body.style.background = 'linear-gradient(135deg, #fff1eb 0%, #ace0f9 100%)';
+                startButton.style.display = 'none';
+                adventureText.style.display = 'none';
+                startNextStage();
             });
             
-            // 创建漂浮爱心
-            function createHearts() {
-                const heartCount = 50;
+            // 初始化关卡
+            function startNextStage() {
+                currentStage++;
                 
-                for (let i = 0; i < heartCount; i++) {
-                    setTimeout(() => {
-                        const heart = document.createElement('div');
-                        heart.classList.add('heart');
+                if (currentStage >= stages.length) {
+                    // 所有关卡完成
+                    return;
+                }
+                
+                // 显示当前关卡
+                const stage = stages[currentStage];
+                document.getElementById(stage.id).style.display = 'flex';
+                
+                // 重置状态
+                stage.chest.style.display = 'block';
+                stage.character.classList.remove('revealed');
+                stage.count = 0;
+                stage.counter.textContent = '0';
+                
+                // 添加振动效果
+                stage.chest.classList.add('vibrate');
+                
+                // 添加点击事件
+                stage.chest.addEventListener('click', function(event) {
+                    handleChestClick(stage, event);
+                });
+                
+                // 下一关按钮事件
+                if (stage.nextBtn) {
+                    stage.nextBtn.classList.remove('show');
+                    stage.nextBtn.addEventListener('click', function(event) {
+                        // 添加点击特效
+                        createRipple(event);
+                        createParticles(event);
                         
-                        // 随机位置
-                        const posX = Math.random() * 100;
-                        heart.style.left = `${posX}%`;
-                        heart.style.top = '100%';
-                        
-                        // 随机大小
-                        const size = 15 + Math.random() * 20;
-                        heart.style.width = `${size}px`;
-                        heart.style.height = `${size}px`;
-                        
-                        // 随机动画
-                        const duration = 2 + Math.random() * 3;
-                        const delay = Math.random() * 2;
-                        heart.style.animation = `floatUp ${duration}s ease-in-out ${delay}s forwards`;
-                        
-                        heartsContainer.appendChild(heart);
-                        
-                        // 动画结束后移除元素
-                        setTimeout(() => {
-                            heart.remove();
-                        }, (duration + delay) * 1000);
-                    }, i * 200);
+                        document.getElementById(stage.id).style.display = 'none';
+                        startNextStage();
+                    });
                 }
             }
+            
+            // 宝箱点击处理
+            function handleChestClick(stage, event) {
+                stage.count++;
+                stage.counter.textContent = stage.count;
+                
+                // 创建爱心效果
+                createHeart();
+                
+                // 创建点击特效
+                createRipple(event);
+                createParticles(event);
+                
+                // 点击5次后打开宝箱
+                if (stage.count >= 5) {
+                    stage.chest.classList.remove('vibrate');
+                    stage.chest.classList.add('open-animation');
+                    
+                    setTimeout(() => {
+                        stage.chest.style.display = 'none';
+                        stage.character.classList.add('revealed');
+                        
+                        // 显示下一关按钮（如果不是最后一关）
+                        if (stage.nextBtn) {
+                            setTimeout(() => {
+                                stage.nextBtn.classList.add('show');
+                            }, 1000);
+                        } else {
+                            // 如果是最后一关，显示最终提示
+                            setTimeout(() => {
+                                showFinalHint();
+                            }, 1500);
+                        }
+                    }, 1000);
+                }
+            }
+            
+            // 显示最终提示
+            function showFinalHint() {
+                finalHint.style.display = 'block';
+                
+                // 添加点击事件
+                finalHint.addEventListener('click', function(event) {
+                    // 添加点击特效
+                    createRipple(event);
+                    createParticles(event);
+                    
+                    // 隐藏提示
+                    this.style.display = 'none';
+                    
+                    // 显示最终奖励
+                    showFinalRewards();
+                    
+                    // 添加庆祝特效
+                    createCelebration();
+                });
+            }
+            
+            // 显示最终奖励
+            function showFinalRewards() {
+                // 隐藏所有关卡
+                stages.forEach(stage => {
+                    document.getElementById(stage.id).style.display = 'none';
+                });
+                
+                // 显示最终奖励区域
+                finalRewards.style.display = 'flex';
+            }
+            
+            // 创建庆祝特效
+            function createCelebration() {
+                // 创建大量爱心
+                for (let i = 0; i < 100; i++) {
+                    setTimeout(() => {
+                        createHeart(true);
+                    }, i * 50);
+                }
+                
+                // 添加文字动画
+                const birthdayText = document.querySelector('.birthday-text');
+                birthdayText.style.animation = 'textPulse 1.5s infinite';
+            }
+            
+            // 创建漂浮爱心
+            function createHeart(isCelebration = false) {
+                const heart = document.createElement('div');
+                heart.classList.add('heart');
+                
+                // 随机位置
+                const posX = Math.random() * 100;
+                heart.style.left = `${posX}%`;
+                
+                // 庆祝模式从顶部开始，否则从底部开始
+                heart.style.top = isCelebration ? '0%' : '80%';
+                
+                // 随机大小
+                const size = isCelebration ? (20 + Math.random() * 30) : (15 + Math.random() * 20);
+                heart.style.width = `${size}px`;
+                heart.style.height = `${size}px`;
+                
+                // 随机动画
+                const duration = isCelebration ? (3 + Math.random() * 3) : (1 + Math.random() * 2);
+                const delay = Math.random() * 0.5;
+                
+                // 庆祝模式使用不同的动画
+                if (isCelebration) {
+                    heart.style.animation = `floatUp ${duration}s ease-in-out ${delay}s forwards, sideways ${duration}s ease-in-out ${delay}s alternate infinite`;
+                } else {
+                    heart.style.animation = `floatUp ${duration}s ease-in-out ${delay}s forwards`;
+                }
+                
+                heartsContainer.appendChild(heart);
+                
+                // 动画结束后移除元素
+                setTimeout(() => {
+                    if (heart.parentNode) {
+                        heart.parentNode.removeChild(heart);
+                    }
+                }, (duration + delay) * 1000);
+            }
+            
+            // 创建波纹效果
+            function createRipple(event) {
+                const ripple = document.createElement('div');
+                ripple.classList.add('ripple');
+                ripple.style.left = `${event.clientX}px`;
+                ripple.style.top = `${event.clientY}px`;
+                document.body.appendChild(ripple);
+                
+                // 动画结束后移除元素
+                setTimeout(() => {
+                    ripple.remove();
+                }, 600);
+            }
+            
+            // 创建粒子效果
+            function createParticles(event) {
+                const particleCount = 12;
+                const colors = ['#ff6b6b', '#ffd700', '#4CAF50', '#2196F3', '#9C27B0'];
+                
+                for (let i = 0; i < particleCount; i++) {
+                    const particle = document.createElement('div');
+                    particle.classList.add('particle');
+                    particle.style.left = `${event.clientX}px`;
+                    particle.style.top = `${event.clientY}px`;
+                    particle.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                    particle.style.setProperty('--tx', `${(Math.random() - 0.5) * 200}px`);
+                    particle.style.setProperty('--ty', `${(Math.random() - 0.5) * 200}px`);
+                    document.body.appendChild(particle);
+                    
+                    // 动画结束后移除元素
+                    setTimeout(() => {
+                        particle.remove();
+                    }, 1000);
+                }
+            }
+            
+            // 添加侧面动画（用于庆祝模式）
+            const style = document.createElement('style');
+            style.innerHTML = `
+                @keyframes sideways {
+                    0% { transform: translateX(0); }
+                    100% { transform: translateX(${Math.random() > 0.5 ? '-' : ''}${50 + Math.random() * 100}px); }
+                }
+            `;
+            document.head.appendChild(style);
         });
     </script>
 </body>

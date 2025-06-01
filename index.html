@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>爱的告白页面</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f8ff;
+            font-family: Arial, sans-serif;
+        }
+        button {
+            padding: 15px 30px;
+            font-size: 18px;
+            background-color: #ff6b6b;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #ff5252;
+        }
+        #message {
+            margin-top: 20px;
+            font-size: 24px;
+            color: #333;
+            display: none; /* 初始隐藏文字 */
+        }
+    </style>
+</head>
+<body>
+    <button id="loveButton">点击这里</button>
+    <div id="message">我爱你</div>
+
+    <script>
+        // 获取按钮和消息元素
+        const button = document.getElementById('loveButton');
+        const message = document.getElementById('message');
+
+        // 添加点击事件监听器
+        button.addEventListener('click', function() {
+            // 隐藏按钮并显示文字
+            button.style.display = 'none';
+            message.style.display = 'block';
+        });
+    </script>
+</body>
+</html>
